@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: swagger-to-excel
+  namespace: erptest1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: swagger-to-excel
+  template:
+    metadata:
+      labels:
+        app: swagger-to-excel
+    spec:
+      containers:
+      - env:
+        - name: PATHBASE
+          value: /swagger-to-excel
+        - name: TZ
+          value: Asia/Shanghai
+        - name: privileged
+          value: "true"
+        image: registry.cn-shanghai.aliyuncs.com/nrsoft/swagger-to-excel:develop
+        imagePullPolicy: Always
+        name: swagger-to-excel
+        ports:
+        - containerPort: 80
+          name: deployservice
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
+          requests:
+            cpu: 50m
+            memory: 256Mi          
+        volumeMounts:
+        - mountPath: /app/Logs
+          name: vol1
+        - name: config-volume
+          mountPath: /app/config
+      imagePullSecrets:
+        - name: aliyun-registry           
+      volumes:
+      - hostPath:
+          path: /var/log/jmkj/erptest1/swagger-to-excel
+          type: ""
+        name: vol1
+      - name: config-volume
+        configMap:
+          name: appsettings-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: swagger-to-excel
+  namespace: erptest1
+  labels:
+    app: swagger-to-excel
+spec:
+  ports:
+  - name: swagger-to-excel
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: swagger-to-excel
