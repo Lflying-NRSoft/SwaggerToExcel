@@ -1,0 +1,12 @@
+﻿{
+  "profiles": {
+    "NRSoft.SwaggerToExcel.HttpApi.Host": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "applicationUrl": "http://localhost:34344",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
