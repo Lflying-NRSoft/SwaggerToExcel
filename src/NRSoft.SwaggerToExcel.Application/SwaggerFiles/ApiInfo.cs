@@ -39,7 +39,10 @@ public class ApiParameter
     public string Type { get; set; }
 
     [ExporterHeader(DisplayName = "是否必填")]
+    [ValueMapping("是", true)]
+    [ValueMapping("否", false)]
     public bool IsRequired { get; set; }
+    public string IsRequiredString { get { return IsRequired ? "是" : "否"; } }
 
     [ExporterHeader(DisplayName = "说明")]
     public string Summary { get; set; }

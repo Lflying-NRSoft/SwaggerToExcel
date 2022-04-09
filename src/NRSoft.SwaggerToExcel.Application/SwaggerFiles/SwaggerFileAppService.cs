@@ -173,7 +173,19 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                 var response = method.Responses[((int)HttpStatusCode.OK).ToString()];
                 var properties = response.ActualResponse.Schema.ActualSchema.ActualProperties;
                 var dataType = properties.FirstOrDefault(p => p.Key == "data").Value;
-                foreach (var pair in dataType.ActualSchema.ActualProperties)
+                var actualProperties = dataType.ActualSchema.ActualProperties;
+
+                // 如果是分页属性，则获取list的属性值
+                if (dataType.ActualSchema.ActualProperties.Any(a => a.Key == "pageNum"))
+                {
+                    dataType = dataType.ActualSchema.ActualProperties.FirstOrDefault(p => p.Key == "list").Value;
+                    if (dataType.IsArray)
+                    {
+                        actualProperties = dataType.Item.ActualSchema.ActualProperties;
+                    }
+                }
+
+                foreach (var pair in actualProperties)
                 {
                     var name = pair.Key;
                     var value = pair.Value;

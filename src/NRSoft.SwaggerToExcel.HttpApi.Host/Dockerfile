@@ -1,6 +1,6 @@
 # docker run -d --rm -p 9007:80 --name dtmdemostock registry.cn-shanghai.aliyuncs.com/nrsoft/dtmdemostock:develop
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM ccr.ccs.tencentyun.com/magicodes/aspnetcore-runtime:6.0withfonts AS base
 WORKDIR /app
 copy . ./ 
 EXPOSE 80 443
