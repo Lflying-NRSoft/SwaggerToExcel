@@ -118,6 +118,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
             {
                 apiInfo.HttpMethod = p.Key.ToUpper();
                 apiInfo.Summary = p.Value.Summary.Replace("(已完成)", "").Replace("（已完成）", "");
+                apiInfo.ContentType = p.Value.Produces.FirstOrDefault();
 
                 var method = p.Value;
                 var Summary = method.Summary;
@@ -126,6 +127,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                 // 请求参数
                 foreach (var parameter in method.Parameters)
                 {
+                    var kind = parameter.Kind.ToString();
                     if (parameter.IsAnyType && parameter.Schema is NJsonSchema.JsonSchema)
                     {
                         // 需要转到具体对象中去。
@@ -144,6 +146,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                             {
                                 Name = name,
                                 Summary = description,
+                                Kind = kind,
                                 IsRequired = IsRequired,
                                 Type = type.ToString(),
                             });
@@ -161,6 +164,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                         {
                             Name = name,
                             Summary = description,
+                            Kind = kind,
                             IsRequired = IsRequired,
                             Type = type.ToString(),
                         });
@@ -174,7 +178,16 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                 var properties = response.ActualResponse.Schema.ActualSchema.ActualProperties;
                 var dataType = properties.FirstOrDefault(p => p.Key == "data").Value;
                 var actualProperties = dataType.ActualSchema.ActualProperties;
-
+                if (!actualProperties.Any())
+                {
+                    apiInfo.ResponseParams.Add(new ApiParameter
+                    {
+                        Name = dataType.Name,
+                        Summary = "返回值",
+                        IsRequired = dataType.IsRequired,
+                        Type = dataType.Type.ToString(),
+                    });
+                }
                 // 如果是分页属性，则获取list的属性值
                 if (dataType.ActualSchema.ActualProperties.Any(a => a.Key == "pageNum"))
                 {

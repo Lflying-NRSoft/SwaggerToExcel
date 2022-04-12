@@ -14,6 +14,9 @@ public class ApiInfo
     [ExporterHeader(DisplayName = "说明")]
     public string Summary { get; set; }
 
+    [ExporterHeader(DisplayName = "返回值类型")]
+    public string ContentType { get; set; }
+
     /// <summary>
     /// 请求参数
     /// </summary>
@@ -37,6 +40,12 @@ public class ApiParameter
 
     [ExporterHeader(DisplayName = "参数类型")]
     public string Type { get; set; }
+
+    /// <summary>
+    /// 参数类型:是Body还是Query
+    /// </summary>
+    [ExporterHeader(DisplayName = "参数类型")]
+    public string Kind { get; set; }
 
     [ExporterHeader(DisplayName = "是否必填")]
     [ValueMapping("是", true)]
