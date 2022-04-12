@@ -139,7 +139,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                             var name = pair.Key;
                             var value = pair.Value;
                             var description = value.Description;
-                            var type = value.Type;
+                            var type = value.Type == JsonObjectType.None ? "对象" : value.Type.ToString();
                             var format = value.Format;
                             var IsRequired = value.IsRequired;
                             apiInfo.RequestParams.Add(new ApiParameter
@@ -148,7 +148,7 @@ public class SwaggerFileAppService : ApplicationService, ISwaggerFileAppService
                                 Summary = description,
                                 Kind = kind,
                                 IsRequired = IsRequired,
-                                Type = type.ToString(),
+                                Type = type,
                             });
                         }
                     }
